@@ -1,4 +1,4 @@
-CONFIG_FILE = 'config.yml.sample'
+CONFIG_FILE = 'config.sample.yml'
 
 require File.join(File.dirname(__FILE__), '..', 'init')
 

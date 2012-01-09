@@ -12,13 +12,13 @@ class Hudhub
   end
 
   # 1. Check github token is valid.
-  # 2. For each base_jobs:
-  #   2.1. find or create a copy of the base_job for the current branch
-  #   2.2. run the job
+  # 2. Find appropriate base_job.
+  # 3. Find or create a copy of the base_job for the current branch
+  # 4. Run the job
   def process
     check_github_token
-    config.base_jobs.each do |base_job_name|
-      if branch_deleted?
+	if base_job_name = config.base_jobs.find { |b| b.match(@github_payload['repository']['name']) }
+	  if branch_deleted?
         Job.delete!(base_job_name, branch)
       else
         Job.find_or_create_copy(base_job_name, branch).run!

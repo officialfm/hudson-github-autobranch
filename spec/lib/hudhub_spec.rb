@@ -71,7 +71,8 @@ describe Hudhub do
 
       context "when the payload object does not contain the key 'deleted'" do
         it "should call Job.find_or_create_copy.run!" do
-          Hudhub::Job.should_receive(:find_or_create_copy).with('my_project', 'da-branch') { the_job }
+          Hudhub.config.stub(:base_jobs => ['github'])
+          Hudhub::Job.should_receive(:find_or_create_copy).with('github', 'da-branch') { the_job }
           the_job.should_receive(:run!)
           Hudhub.process_github_hook('1234ABCD', github_payload)
         end
@@ -79,11 +80,11 @@ describe Hudhub do
 
       context "when the payload object contains the key 'deleted'" do
         it "should call Job.delete!" do
-          Hudhub::Job.should_receive(:delete!).with('my_project', 'da-branch')
+          Hudhub.config.stub(:base_jobs => ['github'])
+          Hudhub::Job.should_receive(:delete!).with('github', 'da-branch')
           Hudhub.process_github_hook('1234ABCD', github_payload_branch_deleted)
         end
       end
-
     end
   end
 
